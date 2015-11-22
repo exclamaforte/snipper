@@ -1,3 +1,5 @@
+import socket
+from threading import Thread
 import re
 import pdb
 # in: lines in byte string format
@@ -158,38 +160,36 @@ class Shrubbery:
     def weights(self):
         return self.root.string_weights()
 
-def test1():
-    s = Shrubbery()
-    s.add("hi there man with b plan")
-    s.add("hi george man with a plan")
-    s.add("hi there mate")
-    s.add("why make software")
-    s.add("why make cranberries")
-    print(str(s))
-    print(s.weights())
 
-def test2():
-    s = Shrubbery()
-    s.add("hi there man")
-    s.add("bye there man")
-    print(str(s))
-    print(s.weights())
 
-def test3():
-    s = Shrubbery()
-    s.add("hi there man")
-    s.add("hi bye man")
-    s.add("hi sigh man")
-    print(str(s))
-    print(s.weights())
+HOST = 'localhost'
+PORT = 53706
 
-def test4():
-    s = Shrubbery()
-    s.add("hi there man with b plan")
-    s.add("hi george man with a plan")
-    s.add("hi there mate")
-    s.add("why make software")
-    s.add("why make cranberries")
-    print(str(s))
-    print(s.weights())
-    print(s.get_top())
+def get_input():
+    print('Connected by', addr)
+    while True:
+        data = conn.recv(1024) #size?
+        if not data:
+            break
+        # conn.sendall(data)
+        recieve(data)
+    conn.close()
+
+def recieve(str_in):
+    print(str_in)
+    send_result(str_in)
+
+def send_result(str_out):
+    conn.sendall(str_out)
+    print("SENT")
+
+if __name__ == "__main__":
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((HOST, PORT))
+    s.listen(1)
+    conn, addr = s.accept()
+
+    input_thread = Thread(target = get_input)
+    input_thread.start()
+    input_thread.join()
+    print("done")
