@@ -3,14 +3,18 @@ from threading import Thread
 import re
 # in: lines in byte string format
 # out: send
+puncts = [b']', b'[', b'{', b'}', b'(', b')', b'>', b'<', b'?', b':']
+
 class ByteStrList:
     def __init__(self, num):
         "Creates a list with a fixed length"
         self.LIMIT = num
         self.l = []
     def split(bstr):
-        # print(bstr)
-        return re.split(b'[^a-zA-Z0-9]+', bstr)
+        #TODO prune empty string
+        for s in puncts:
+            bstr = bstr.replace(s, b' ' + s + b' ')
+        return re.split(b'[^a-zA-Z0-9\]\[\{\}\(\)\>\<\?\:]+', bstr)
     def add_line(self, bytestring):
         "Add a line to the list"
         s = ByteStrList.split(bytestring)
