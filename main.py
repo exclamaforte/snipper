@@ -13,8 +13,6 @@ class ByteStrList:
         self.LIMIT = num
         self.l = []
     def split(bstr):
-        print(bstr)
-        #TODO prune empty string
         for s in puncts:
             bstr = bstr.replace(s, b' ' + s + b' ')
         return list(filter(None, re.split(b'[^a-zA-Z0-9\]\[\{\}\(\)\>\<\?\:\~]+', bstr)))
@@ -117,8 +115,8 @@ class Shrubbery:
         self.num_in += 1
         value_list = self.bsl.add_line(bytestring)
         self.root.weight += 1
-        node = self.root.next_inc_lookahead1(value_list[0])
-        i = 1
+        node = self.root
+        i = 0
         while i < len(value_list):
             if i == len(value_list) - 1:
                 node.next_inc_lookahead1(value_list[i])
@@ -210,3 +208,52 @@ if __name__ == "__main__":
     input_thread.start()
     input_thread.join()
     print("done")
+
+def test1():
+    s = Shrubbery()
+    s.add("hi there man with b plan")
+    s.add("hi george man with a plan")
+    s.add("hi there mate")
+    s.add("why make software")
+    s.add("why make cranberries")
+    print(str(s))
+    print(s.weights())
+
+def test2():
+    s = Shrubbery()
+    s.add("hi there man")
+    s.add("bye there man")
+    print(str(s))
+    print(s.weights())
+
+def test3():
+    s = Shrubbery()
+    s.add("hi there man")
+    s.add("hi bye man")
+    s.add("hi sigh man")
+    print(str(s))
+    print(s.weights())
+
+def test4():
+    s = Shrubbery()
+    s.add("hi there man with b plan")
+    s.add("hi george man with a plan")
+    s.add("hi there mate")
+    s.add("why make software")
+    s.add("why make cranberries")
+    print(str(s))
+    print(s.weights())
+    print(s.get_top())
+
+def test5():
+    s = Shrubbery()
+    for i in range(10000):
+        s.add("hi there man with b plan")
+        s.add("hi george man with a plan")
+        s.add("hi there mate")
+        s.add("why make software")
+        s.add("why make cranberries")
+
+def test6():
+    b = ByteStrList(100)
+    print(b.add_line(b'public static void main(String[] args<T>){True?1:false}'))
