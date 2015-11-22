@@ -139,7 +139,7 @@ class Shrubbery:
                 node2 = node.find(wrd)
                 if node2.weight > node.weight:
                     #this means that there's a split
-                    pattern.append(0)
+                    pattern.append(b'*')
                     score += 3 * node2.weight
                 else:
                     pattern.append(node.value)
@@ -170,6 +170,10 @@ HOST = 'localhost'
 PORT_OUT = 53706
 PORT_IN = 53707
 
+def format(snippet):
+    return b' '.join(snippet[0])
+
+
 def get_input():
     index = 0
     print('Connected by', addr_in)
@@ -180,8 +184,8 @@ def get_input():
             break
         print(data)
         shrub.add(data)
-        if index % 20 == 0:
-            print(shrub.get_top())
+        if index % 7 == 0:
+            print(format(shrub.get_top()))
         # conn.sendall(data)
         # recieve(data)
     conn_in.close()
