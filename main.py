@@ -2,6 +2,7 @@ import socket
 from threading import Thread
 import re
 import pdb
+import sys
 # in: lines in byte string format
 # out: send
 class ByteStrList:
@@ -163,31 +164,41 @@ class Shrubbery:
 
 
 HOST = 'localhost'
-PORT = 53706
+PORT_OUT = 53706
+PORT_IN = 53707
 
 def get_input():
-    print('Connected by', addr)
+    print('Connected by', addr_in)
     while True:
-        data = conn.recv(1024) #size?
+        data = conn_in.recv(1024) #size?
         if not data:
             break
+        print(data)
         # conn.sendall(data)
-        recieve(data)
-    conn.close()
+        # recieve(data)
+    conn_in.close()
 
 def recieve(str_in):
     print(str_in)
     send_result(str_in)
 
 def send_result(str_out):
-    conn.sendall(str_out)
+    # conn_out.sendall(str_out)
+    # socket_out.sendall(str_out)
     print("SENT")
 
 if __name__ == "__main__":
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((HOST, PORT))
-    s.listen(1)
-    conn, addr = s.accept()
+    socket_in = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socket_in.bind((HOST, PORT_IN))
+    socket_in.listen(1)
+    conn_in, addr_in = socket_in.accept()
+    print('asrtars')
+
+    # socket_out = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # socket_out.connect((HOST, PORT_OUT))
+    # socket_out.listen(1)
+    # conn_out, addr_out = socket_out.accept()
+    print('asrtars')
 
     input_thread = Thread(target = get_input)
     input_thread.start()
