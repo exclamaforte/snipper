@@ -3,7 +3,7 @@ from threading import Thread
 import re
 # in: lines in byte string format
 # out: send
-puncts = [b']', b'[', b'{', b'}', b'(', b')', b'>', b'<', b'?', b':']
+puncts = [b']', b'[', b'{', b'}', b'(', b')', b'>', b'<', b'?', b':', b'~']
 
 class ByteStrList:
     def __init__(self, num):
@@ -14,7 +14,8 @@ class ByteStrList:
         #TODO prune empty string
         for s in puncts:
             bstr = bstr.replace(s, b' ' + s + b' ')
-        return re.split(b'[^a-zA-Z0-9\]\[\{\}\(\)\>\<\?\:]+', bstr)
+        return list(filter(None, re.split(b'[^a-zA-Z0-9\]\[\{\}\(\)\>\<\?\:\~]+', bstr)))
+
     def add_line(self, bytestring):
         "Add a line to the list"
         s = ByteStrList.split(bytestring)
