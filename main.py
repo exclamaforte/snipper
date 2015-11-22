@@ -1,8 +1,6 @@
 import socket
 from threading import Thread
 import re
-import pdb
-import sys
 # in: lines in byte string format
 # out: send
 puncts = [b']', b'[', b'{', b'}', b'(', b')', b'>', b'<', b'?', b':', b'~']
@@ -140,7 +138,7 @@ class Shrubbery:
                 node2 = node.find(wrd)
                 if node2.weight > node.weight:
                     #this means that there's a split
-                    pattern.append(0)
+                    pattern.append(b'*')
                     score += 3 * node2.weight
                 else:
                     pattern.append(node.value)
@@ -171,13 +169,22 @@ HOST = 'localhost'
 PORT_OUT = 53706
 PORT_IN = 53707
 
+def format(snippet):
+    return b' '.join(snippet[0])
+
+
 def get_input():
+    index = 0
     print('Connected by', addr_in)
     while True:
+        index += 1
         data = conn_in.recv(1024) #size?
         if not data:
             break
         print(data)
+        shrub.add(data)
+        if index % 7 == 0:
+            print(format(shrub.get_top()))
         # conn.sendall(data)
         # recieve(data)
     conn_in.close()
@@ -192,6 +199,9 @@ def send_result(str_out):
     print("SENT")
 
 if __name__ == "__main__":
+    shrub = Shrubbery()
+
+
     socket_in = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_in.bind((HOST, PORT_IN))
     socket_in.listen(1)
