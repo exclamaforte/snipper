@@ -1,8 +1,6 @@
 import socket
 from threading import Thread
 import re
-import pdb
-import sys
 # in: lines in byte string format
 # out: send
 class ByteStrList:
@@ -11,8 +9,8 @@ class ByteStrList:
         self.LIMIT = num
         self.l = []
     def split(bstr):
-        print(bstr)
-        return re.split('[^a-zA-Z0-9]+', bstr)
+        # print(bstr)
+        return re.split(b'[^a-zA-Z0-9]+', bstr)
     def add_line(self, bytestring):
         "Add a line to the list"
         s = ByteStrList.split(bytestring)
@@ -168,12 +166,17 @@ PORT_OUT = 53706
 PORT_IN = 53707
 
 def get_input():
+    index = 0
     print('Connected by', addr_in)
     while True:
+        index += 1
         data = conn_in.recv(1024) #size?
         if not data:
             break
         print(data)
+        shrub.add(data)
+        if index % 20 == 0:
+            print(shrub.get_top())
         # conn.sendall(data)
         # recieve(data)
     conn_in.close()
@@ -188,6 +191,9 @@ def send_result(str_out):
     print("SENT")
 
 if __name__ == "__main__":
+    shrub = Shrubbery()
+
+
     socket_in = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_in.bind((HOST, PORT_IN))
     socket_in.listen(1)
